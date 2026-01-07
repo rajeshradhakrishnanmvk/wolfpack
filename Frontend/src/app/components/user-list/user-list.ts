@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../../services/user';
@@ -21,16 +21,24 @@ export class UserList implements OnInit {
     domainName: ''
   };
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService,
+    private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
+    console.log('Component initialized, loading users...');
     this.loadUsers();
   }
 
   loadUsers(): void {
+    console.log('loadUsers() called');
     this.userService.getUsers().subscribe({
       next: (data) => {
-        this.users = data;
+        console.log('Users loaded:', data);
+        console.log('Users array length:', data?.length);
+        console.log('Users array type:', Array.isArray(data));
+        this.users = Array.isArray(data) ? data : [];
+        console.log('this.users after assignment:', this.users);
+        this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Error loading users:', error);
