@@ -1,0 +1,84 @@
+<div class="container">
+  <h1>User Management</h1>
+
+  <div class="form-section">
+    <h2>{{ isEditing ? 'Edit User' : 'Add New User' }}</h2>
+    <form (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="name">Name:</label>
+        <input
+          type="text"
+          id="name"
+          [(ngModel)]="newUser.name"
+          name="name"
+          required
+          placeholder="Enter user name"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="podName">Pod Name:</label>
+        <input
+          type="text"
+          id="podName"
+          [(ngModel)]="newUser.podName"
+          name="podName"
+          required
+          placeholder="Enter pod name"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="domainName">Domain Name:</label>
+        <input
+          type="text"
+          id="domainName"
+          [(ngModel)]="newUser.domainName"
+          name="domainName"
+          required
+          placeholder="Enter domain name"
+        />
+      </div>
+
+      <div class="button-group">
+        <button type="submit" class="btn btn-primary">
+          {{ isEditing ? 'Update' : 'Add' }} User
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="resetForm()" *ngIf="isEditing">
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="users-section">
+    <h2>Users List</h2>
+    <div *ngIf="users.length === 0" class="no-users">
+      No users found. Add your first user above.
+    </div>
+    <table *ngIf="users.length > 0">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Pod Name</th>
+          <th>Domain Name</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td>{{ user.id }}</td>
+          <td>{{ user.name }}</td>
+          <td>{{ user.podName }}</td>
+          <td>{{ user.domainName }}</td>
+          <td>
+            <button class="btn btn-edit" (click)="editUser(user)">Edit</button>
+            <button class="btn btn-delete" (click)="deleteUser(user.id)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
