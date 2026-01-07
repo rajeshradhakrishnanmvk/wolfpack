@@ -12,14 +12,18 @@ builder.Services.AddOpenApi();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection") ?? "Data Source=users.db"));
 
-// Configure CORS
+// Add CORS services
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularApp",
-        builder => builder
-            .WithOrigins("http://localhost:4200", "https://localhost:4200")
-            .AllowAnyMethod()
-            .AllowAnyHeader());
+        builder =>
+        {
+            // Replace with your actual Codespaces front-end URL(s)
+            builder.WithOrigins("https://*.githubpreview.dev", "http://localhost:4200") 
+                   .AllowAnyMethod()
+                   .AllowAnyHeader()
+                   .AllowCredentials(); // Required if you use authentication cookies/credentials
+        });
 });
 
 var app = builder.Build();
@@ -32,12 +36,12 @@ using (var scope = app.Services.CreateScope())
 }
 
 // Configure the HTTP request pipeline.
+app.UseCors("AllowAngularApp");
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
-
-app.UseCors("AllowAngularApp");
 
 app.UseAuthorization();
 
